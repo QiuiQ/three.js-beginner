@@ -13,4 +13,4 @@ http-server -c-1 -p 8010
 ```
 
 ## Documentation
-[three.js Documentation] (https://threejs.org/docs/#manual/en/introduction/Installation)
+[three.js Documentation](https://threejs.org/docs/#manual/en/introduction/Installation)
