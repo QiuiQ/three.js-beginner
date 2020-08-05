@@ -1,0 +1,86 @@
+<html>
+	<head>
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+			canvas { display: block; }
+		</style>
+	</head>
+	<body>
+		<script type="module">
+			import * as THREE from "./node_modules/three/build/three.module.js"
+			import { OBJLoader } from "./node_modules/three/examples/jsm/loaders/OBJLoader.js"
+			import { OrbitControls } from "./node_modules/three/examples/jsm/controls/OrbitControls.js";
+			var mesh, renderer, scene, camera, controls;
+
+			init();
+			animate();
+
+			function init() {
+
+				// renderer
+				renderer = new THREE.WebGLRenderer();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+
+				// scene
+				scene = new THREE.Scene();
+				
+				// camera
+				camera = new THREE.PerspectiveCamera( 20, window.innerWidth / window.innerHeight, 0.1, 1000 );
+				camera.position.set( 10, 10, 10 );
+
+				// controls
+				controls = new OrbitControls( camera, renderer.domElement );
+				
+				
+				// light
+				var light = new THREE.DirectionalLight( 0xffffff, 1 );
+				light.position.set( 10, 10, 0 );
+				scene.add( light );
+				
+				// axes XYZ
+				scene.add( new THREE.AxesHelper( 20 ) );
+
+				// geometry
+				var geometry = new THREE.SphereGeometry( 5, 12, 8 );
+				
+				// material
+				var material = new THREE.MeshPhongMaterial( {
+					color: 0xffffff, 
+					opacity: 1.0,
+				} );
+				
+				// mesh
+				var objLoader = new OBJLoader();
+				objLoader.load( 
+					"models/path/your_model.obj",
+					function ( object ) {
+						object.traverse( function ( child ) {
+							if ( child instanceof THREE.Mesh ) {
+								child.material = material;
+							}
+						});
+						scene.add( object );
+						animate();
+					},
+					// called when loading is in progresses
+					function ( xhr ) {
+						console.log( ( xhr.loaded / xhr.total * 100 ) + "% loaded" );
+					},
+					// called when loading has errors
+					function ( error ) {
+						console.log("error message:" + error.message);
+					}
+				);
+				
+			}
+
+			function animate() {
+				requestAnimationFrame( animate );
+				renderer.render( scene, camera );
+			}
+
+		</script>
+	</body>
+</html>
